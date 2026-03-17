@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#ffffff">
 <link rel="manifest" href="manifest.json">
-<title>ORR Sector Tracker</title>
+<title>Jurisdiction Location</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/polylabel@1.1.0/dist/polylabel.min.js"></script>
@@ -71,7 +71,7 @@ html, body { height: 100%; font-family: -apple-system, BlinkMacSystemFont, 'Sego
 <div id="banner">
   <div style="display:flex;align-items:flex-start;justify-content:space-between;">
     <div style="flex:1;min-width:0;">
-      <div id="banner-label">ORR Sector</div>
+      <div id="banner-label">Jurisdiction Location</div>
       <div id="sector-name" class="unknown">Locating…</div>
     </div>
     <button class="ctrl-btn" id="cfg-btn" style="margin-left:12px;flex-shrink:0;width:36px;height:36px;font-size:15px;">⚙</button>
@@ -98,9 +98,9 @@ html, body { height: 100%; font-family: -apple-system, BlinkMacSystemFont, 'Sego
       <circle cx="12" cy="12" r="3"/><path d="M12 2v2M12 20v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M2 12h2M20 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
     </svg>
   </div>
-  <h1>ORR Sector Tracker</h1>
+  <h1>Jurisdiction Location</h1>
   <p>Tap to start tracking</p>
-  <button id="start-btn">Start</button>
+  <button id="start-btn">Locate</button>
 </div>
 
 <div id="config-overlay">
@@ -112,7 +112,7 @@ html, body { height: 100%; font-family: -apple-system, BlinkMacSystemFont, 'Sego
       <select id="cfg-voice"></select>
     </div>
     <div class="fg">
-      <label>Alert on specific sector (blank = any)</label>
+      <label>Alert on specific jurisdiction (blank = any)</label>
       <input type="text" id="cfg-alert-sector" placeholder="exact sector name">
     </div>
     <div class="fg chk-row">
@@ -124,10 +124,11 @@ html, body { height: 100%; font-family: -apple-system, BlinkMacSystemFont, 'Sego
 </div>
 
 <script>
-const FS_BASE = 'https://services1.arcgis.com/kILp9lqGUeOhnDbI/arcgis/rest/services/ORR_Sectors_view/FeatureServer';
-const FIELD   = 'SEC_NAME';
+const FS_BASE = 'https://services1.arcgis.com/kILp9lqGUeOhnDbI/arcgis/rest/services/NFIP_Directory_v2/FeatureServer';
+const LAYER =0;
+const FIELD   = 'Name_Proper';
 
-let cfg = { url: FS_BASE, layer: 0, field: FIELD, alertSector: '', alertAny: true, voiceName: '' };
+let cfg = { url: FS_BASE, layer: LAYER, field: FIELD, alertSector: '', alertAny: true, voiceName: '' };
 try { Object.assign(cfg, JSON.parse(localStorage.getItem('orrCfg') || '{}')); } catch(e) {}
 function saveCfg() { try { localStorage.setItem('orrCfg', JSON.stringify(cfg)); } catch(e) {} }
 function layerUrl() { return cfg.url + '/' + cfg.layer; }
@@ -282,17 +283,12 @@ function setSector(name) {
   if (name === prev) {
     if (!spokeSector) {
       spokeSector = true;
-      if (!name) { el.textContent = 'Outside sector coverage'; el.className = 'unknown'; speak('Outside sector coverage'); }
-      else { el.textContent = name; el.className = ''; speak('Sector: ' + name); }
+    el.textContent = name; el.className = ''; speak('Jurisdiction: ' + name);
     }
     return;
   }
   currentSector = name;
-  if (!name) {
-    el.textContent = 'Outside sector coverage'; el.className = 'unknown';
-    if (spokeSector) speak('Outside sector coverage');
-    spokeSector = true; return;
-  }
+  if (!name) return;
   el.textContent = name; el.className = '';
   void el.offsetWidth; el.classList.add('flash');
   fireAlert(name);
