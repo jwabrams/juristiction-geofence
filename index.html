@@ -271,7 +271,7 @@ function updateMapExtent(lat, lng) {
   }
   initialFitDone = true;
 }
-
+  
 async function doQuery(lat, lng) {
   const geom = encodeURIComponent(JSON.stringify({ x: lng, y: lat, spatialReference: { wkid: 4326 } }));
   const url = layerUrl() + '/query?geometry=' + geom + '&geometryType=esriGeometryPoint&inSR=4326&spatialRel=esriSpatialRelWithin&outFields=' + encodeURIComponent(cfg.field) + '&returnGeometry=true&f=json';
