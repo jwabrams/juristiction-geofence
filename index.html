@@ -50,19 +50,14 @@ html, body { height: 100%; font-family: -apple-system, BlinkMacSystemFont, 'Sego
 #splash p { font-size: 15px; color: #7a8499; }
 #splash button { padding: 14px 48px; background: #1a6abf; border: none; border-radius: 10px; color: #fff; font-size: 18px; font-weight: 600; cursor: pointer; -webkit-appearance: none; }
 
-#config-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.45); z-index: 2000; align-items: flex-end; justify-content: center; }
+#config-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.45); z-index: 3000; align-items: flex-end; justify-content: center; }
 #config-overlay.open { display: flex; }
-#config-panel { background: #fff; border: 1px solid #dde3ed; border-radius: 14px 14px 0 0; padding: 20px 16px 36px; width: 100%; max-width: 500px; }
+#config-panel { background: #fff; border-radius: 14px 14px 0 0; padding: 20px 16px 40px; width: 100%; max-width: 500px; }
 #config-panel h2 { font-size: 15px; font-weight: 600; margin-bottom: 16px; color: #1a1f2e; }
-.fg { margin-bottom: 13px; }
-.fg label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: #7a8499; display: block; margin-bottom: 5px; }
-.fg input, .fg select { width: 100%; padding: 8px 10px; background: #f5f7fa; border: 1px solid #dde3ed; border-radius: 6px; color: #1a1f2e; font-size: 13px; }
-.fg input:focus, .fg select:focus { outline: none; border-color: #1a6abf; }
 .chk-row { display: flex; align-items: center; gap: 10px; }
-.chk-row input[type=checkbox] { width: 16px; height: 16px; accent-color: #1a6abf; flex-shrink: 0; }
-.chk-row label { font-size: 13px; color: #1a1f2e; font-weight: 400; text-transform: none; letter-spacing: 0; }
-#save-btn { width: 100%; padding: 10px; background: #1a6abf; border: none; border-radius: 6px; color: #fff; font-size: 14px; font-weight: 600; cursor: pointer; margin-top: 6px; }
-#close-cfg { float: right; background: none; border: none; color: #7a8499; font-size: 20px; cursor: pointer; }
+.chk-row input[type=checkbox] { width: 18px; height: 18px; accent-color: #1a6abf; flex-shrink: 0; }
+.chk-row label { font-size: 14px; color: #1a1f2e; }
+#close-cfg { float: right; background: none; border: none; color: #7a8499; font-size: 22px; cursor: pointer; line-height: 1; }
 
 .sector-label { background: none; border: none; box-shadow: none; font-size: 11px; font-weight: 700; color: #1a6abf; text-align: center; white-space: nowrap; text-shadow: 1px 1px 0 #fff, -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff; pointer-events: none; }
 </style>
@@ -109,11 +104,10 @@ html, body { height: 100%; font-family: -apple-system, BlinkMacSystemFont, 'Sego
   <div id="config-panel">
     <button id="close-cfg">✕</button>
     <h2>Settings</h2>
-    <div class="fg chk-row">
+    <div class="chk-row">
       <input type="checkbox" id="cfg-alert-any">
       <label for="cfg-alert-any">Alert + vibrate on every boundary crossing</label>
     </div>
-    <button id="save-btn">Save &amp; Apply</button>
   </div>
 </div>
 
@@ -343,11 +337,10 @@ document.getElementById('start-btn').addEventListener('click', function() {
 });
 
 window.addEventListener('resize', setMapHeight);
-document.getElementById('cfg-btn').addEventListener('click', openConfig);
-document.getElementById('close-cfg').addEventListener('click', closeConfig);
-document.getElementById('save-btn').addEventListener('click', saveConfig);
 document.getElementById('center-btn').addEventListener('click', centerOnMe);
 document.getElementById('reload-btn').addEventListener('click', reloadSectors);
+document.getElementById('cfg-btn').addEventListener('click', openConfig);
+document.getElementById('close-cfg').addEventListener('click', closeConfig);
 document.getElementById('config-overlay').addEventListener('click', function(e) { if (e.target === this) closeConfig(); });
 
 try {
