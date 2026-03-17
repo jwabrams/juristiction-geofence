@@ -209,12 +209,15 @@ async function reloadSectors() {
     });
     labelLayer.addTo(map);
     map.on('zoomend', function() {
-      map.getZoom() >= 10 ? (!map.hasLayer(labelLayer) && map.addLayer(labelLayer)) : (map.hasLayer(labelLayer) && map.removeLayer(labelLayer));
+      const z = map.getZoom();
+      z >= 10 ? (!map.hasLayer(labelLayer) && map.addLayer(labelLayer)) : (map.hasLayer(labelLayer) && map.removeLayer(labelLayer));
+      z >= 9  ? (!map.hasLayer(sectorLayer) && map.addLayer(sectorLayer)) : (map.hasLayer(sectorLayer) && map.removeLayer(sectorLayer));
     });
     if (map.getZoom() < 10) map.removeLayer(labelLayer);
+    if (map.getZoom() < 9)  map.removeLayer(sectorLayer);
     if (n > 0 && !locMarker) map.fitBounds(sectorLayer.getBounds(), { padding: [20, 20] });
-    setDot('active'); setMsg(n + ' sectors loaded');
-  } catch(e) { setDot('error'); setMsg('Sector load failed'); console.error(e); }
+    setDot('active'); setMsg(n + ' jurisdictions loaded');
+  } catch(e) { setDot('error'); setMsg('Layer load failed'); console.error(e); }
 }
 
 function startGPS() {
@@ -265,6 +268,7 @@ function updateMapExtent(lat, lng) {
   } else {
     map.fitBounds(sectorLayer.getBounds().extend(pt), { padding: [40, 40], maxZoom: 11, animate: true });
   }
+  initialFitDone = true;
 }
 
 async function doQuery(lat, lng) {
@@ -283,12 +287,18 @@ function setSector(name) {
   if (name === prev) {
     if (!spokeSector) {
       spokeSector = true;
-    el.textContent = name; el.className = ''; speak('Jurisdiction: ' + name);
+      if (!name) { el.textContent = 'Outside sector coverage';
+      el.className = 'unknown'; speak('Outside sector coverage'); }
+    else { el.textContent = name; el.className = ''; speak('Sector: ' + name); }
     }
     return;
   }
   currentSector = name;
-  if (!name) return;
+  if (!name) {
+  el.textContent = 'Outside sector coverage'; el.className = 'unknown';
+  if (spokeSector) speak('Outside sector coverage');
+  spokeSector = true; return;
+  }
   el.textContent = name; el.className = '';
   void el.offsetWidth; el.classList.add('flash');
   fireAlert(name);
