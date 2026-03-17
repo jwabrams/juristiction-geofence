@@ -73,13 +73,16 @@ html, body { height: 100%; font-family: -apple-system, BlinkMacSystemFont, 'Sego
 
 #config-overlay {
   display: none; position: fixed; inset: 0;
-  background: rgba(0,0,0,0.45); z-index: 3000;
-  align-items: flex-end; justify-content: center;
+  z-index: 3000;
 }
-#config-overlay.open { display: flex; }
+#config-overlay.open { display: block; }
 #config-panel {
-  background: #fff; border-radius: 14px 14px 0 0;
-  padding: 20px 16px 48px; width: 100%; max-width: 500px;
+  position: fixed; bottom: 110px; left: 16px; right: 16px;
+  background: #fff; border-radius: 16px;
+  padding: 16px 16px 20px;
+  border: 0.5px solid #dde3ed;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+  max-width: 500px; margin: 0 auto;
 }
 #config-panel h2 { font-size: 15px; font-weight: 600; margin-bottom: 20px; color: #1a1f2e; }
 #close-cfg { float: right; background: none; border: none; color: #7a8499; font-size: 22px; cursor: pointer; line-height: 1; }
