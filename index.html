@@ -68,7 +68,6 @@ html, body { height: 100%; font-family: -apple-system, BlinkMacSystemFont, 'Sego
 <div id="banner">
   <div style="display:flex;align-items:flex-start;justify-content:space-between;">
     <div style="flex:1;min-width:0;">
-    
       <div id="banner-label">Jurisdiction</div>
       <div id="sector-name" class="unknown">Locating…</div>
     </div>
@@ -95,7 +94,6 @@ html, body { height: 100%; font-family: -apple-system, BlinkMacSystemFont, 'Sego
       <circle cx="12" cy="12" r="3"/><path d="M12 2v2M12 20v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M2 12h2M20 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
     </svg>
   </div>
-
   <h1>Jurisdiction Tracker</h1>
   <p>Tap to start tracking</p>
   <button id="start-btn">Locate</button>
@@ -109,7 +107,6 @@ html, body { height: 100%; font-family: -apple-system, BlinkMacSystemFont, 'Sego
       <label>Voice</label>
       <select id="cfg-voice"></select>
     </div>
-    <!-- ✏️ Updated placeholder text -->
     <div class="fg">
       <label>Alert on specific jurisdiction (blank = any)</label>
       <input type="text" id="cfg-alert-sector" placeholder="exact jurisdiction name">
@@ -123,11 +120,9 @@ html, body { height: 100%; font-family: -apple-system, BlinkMacSystemFont, 'Sego
 </div>
 
 <script>
-
 const FS_BASE = 'https://services1.arcgis.com/kILp9lqGUeOhnDbI/arcgis/rest/services/NFIP_Directory_v2/FeatureServer';
-const LAYER   = 0;           // layer index
-const FIELD   = 'Name_Proper'; // field that holds the jurisdiction name
-
+const LAYER   = 0;
+const FIELD   = 'Name_Proper';
 
 let cfg = { url: FS_BASE, layer: LAYER, field: FIELD, alertSector: '', alertAny: true, voiceName: '' };
 try { Object.assign(cfg, JSON.parse(localStorage.getItem('jurisCfg') || '{}')); } catch(e) {}
@@ -144,7 +139,7 @@ function setMapHeight() {
 const map = L.map('map', { zoomControl: false, attributionControl: false, tap: false });
 L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}', { maxZoom: 16 }).addTo(map);
 L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Reference/MapServer/tile/{z}/{y}/{x}', { maxZoom: 16 }).addTo(map);
-map.setView([35.9, -84.0], 9); // ✏️ Adjust default center for your area
+map.setView([35.9, -84.0], 9);
 
 let sectorLayer = null, labelLayer = null, locMarker = null, accCircle = null;
 let currentSector = null, watchId = null, alertTimer = null, qTimer = null, extentTimer = null, initialFitDone = false;
@@ -154,7 +149,11 @@ let spokeSector = false;
 let selectedVoice = null;
 function loadVoices() {
   if (!window.speechSynthesis) return;
-  const voices = window.speechSynthesis.getVoices().filter(v => v.lang.startsWith('en'));
+  const PREFERRED = ['Samantha', 'Karen', 'Alex', 'Daniel', 'Google US English', 'Google UK English Female', 'Google UK English Male'];
+  const all = window.speechSynthesis.getVoices().filter(v => v.lang.startsWith('en-US') || v.lang.startsWith('en-us'));
+  const voices = all.filter(v => PREFERRED.includes(v.name)).slice(0, 4).length >= 2
+    ? all.filter(v => PREFERRED.includes(v.name)).slice(0, 4)
+    : all.slice(0, 4);
   const sel = document.getElementById('cfg-voice');
   if (!sel || voices.length === 0) return;
   sel.innerHTML = voices.map((v, i) => '<option value="' + i + '"' + (v.name === cfg.voiceName ? ' selected' : '') + '>' + v.name + ' (' + v.lang + ')</option>').join('');
@@ -278,13 +277,11 @@ async function doQuery(lat, lng) {
   try {
     const data = await (await fetch(url)).json();
     if (!data.features || data.features.length === 0) { setSector(null); return; }
-    // Pick the smallest polygon by bounding box area (most specific jurisdiction)
     let best = null, bestArea = Infinity;
     data.features.forEach(function(feat) {
       if (!feat.geometry || !feat.geometry.rings) return;
-      const rings = feat.geometry.rings;
       let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
-      rings.forEach(function(ring) {
+      feat.geometry.rings.forEach(function(ring) {
         ring.forEach(function(pt) {
           if (pt[0] < minX) minX = pt[0]; if (pt[0] > maxX) maxX = pt[0];
           if (pt[1] < minY) minY = pt[1]; if (pt[1] > maxY) maxY = pt[1];
