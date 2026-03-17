@@ -17,7 +17,7 @@ html, body { height: 100%; font-family: -apple-system, BlinkMacSystemFont, 'Sego
 
 #banner { background: #fff; border-bottom: 1px solid #dde3ed; padding: 12px 16px 10px; box-shadow: 0 1px 6px rgba(0,0,0,0.1); position: relative; z-index: 1; }
 #banner-label { font-size: 10px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: #7a8499; margin-bottom: 3px; }
-#sector-name { font-size: 26px; font-weight: 700; color: #1a6abf; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; line-height: 1.15; }
+#sector-name { font-size: 24px; font-weight: 700; color: #1a6abf; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; line-height: 1.15; }
 #sector-name.unknown { color: #9aa0b0; font-style: italic; font-weight: 400; font-size: 22px; }
 #sector-name.flash { animation: flash 0.7s ease; }
 @keyframes flash { 0%{background:rgba(26,106,191,0.12);border-radius:4px;padding-left:6px} 100%{background:transparent;padding-left:0} }
@@ -68,6 +68,7 @@ html, body { height: 100%; font-family: -apple-system, BlinkMacSystemFont, 'Sego
 <div id="banner">
   <div style="display:flex;align-items:flex-start;justify-content:space-between;">
     <div style="flex:1;min-width:0;">
+      <!-- ✏️ Change the label below to whatever fits: "County", "Municipality", "Jurisdiction", etc. -->
       <div id="banner-label">Jurisdiction</div>
       <div id="sector-name" class="unknown">Locating…</div>
     </div>
@@ -122,13 +123,11 @@ html, body { height: 100%; font-family: -apple-system, BlinkMacSystemFont, 'Sego
 </div>
 
 <script>
-// ============================================================
-// ✏️  CONFIGURE THESE THREE CONSTANTS FOR YOUR LAYER
-// ============================================================
-const FS_BASE = 'https://services1.arcgis.com/kILp9lqGUeOhnDbI/arcgis/rest/services/NFIP_Directory_v2/FeatureServer';
+
+const FS_BASE = 'https://YOUR_ORG.arcgis.com/arcgis/rest/services/YOUR_SERVICE/FeatureServer';
 const LAYER   = 0;           // layer index
-const FIELD   = 'Name_Proper'; // field that holds the jurisdiction name
-// ============================================================
+const FIELD   = 'JURIS_NAME'; // field that holds the jurisdiction name
+
 
 let cfg = { url: FS_BASE, layer: LAYER, field: FIELD, alertSector: '', alertAny: true, voiceName: '' };
 try { Object.assign(cfg, JSON.parse(localStorage.getItem('jurisCfg') || '{}')); } catch(e) {}
@@ -278,12 +277,19 @@ async function doQuery(lat, lng) {
   const url = layerUrl() + '/query?geometry=' + geom + '&geometryType=esriGeometryPoint&inSR=4326&spatialRel=esriSpatialRelWithin&outFields=' + encodeURIComponent(cfg.field) + '&returnGeometry=true&f=json';
   try {
     const data = await (await fetch(url)).json();
-     if (!data.features || data.features.length === 0) { setSector(null); return; }
-     let best = null, bestArea = Infinity;
-     data.features.forEach(function(feat) {
+    if (!data.features || data.features.length === 0) { setSector(null); return; }
+    // Pick the smallest polygon by bounding box area (most specific jurisdiction)
+    let best = null, bestArea = Infinity;
+    data.features.forEach(function(feat) {
       if (!feat.geometry || !feat.geometry.rings) return;
-      let minX=Inf, minY=Inf, maxX=-Inf, maxY=-Inf;
-      rings → scan all points → compute bbox extents
+      const rings = feat.geometry.rings;
+      let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+      rings.forEach(function(ring) {
+        ring.forEach(function(pt) {
+          if (pt[0] < minX) minX = pt[0]; if (pt[0] > maxX) maxX = pt[0];
+          if (pt[1] < minY) minY = pt[1]; if (pt[1] > maxY) maxY = pt[1];
+        });
+      });
       const area = (maxX - minX) * (maxY - minY);
       if (area < bestArea) { bestArea = area; best = feat; }
     });
