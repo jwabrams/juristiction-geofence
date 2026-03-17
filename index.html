@@ -68,6 +68,7 @@ html, body { height: 100%; font-family: -apple-system, BlinkMacSystemFont, 'Sego
 <div id="banner">
   <div style="display:flex;align-items:flex-start;justify-content:space-between;">
     <div style="flex:1;min-width:0;">
+    
       <div id="banner-label">Jurisdiction</div>
       <div id="sector-name" class="unknown">Locating…</div>
     </div>
@@ -94,6 +95,7 @@ html, body { height: 100%; font-family: -apple-system, BlinkMacSystemFont, 'Sego
       <circle cx="12" cy="12" r="3"/><path d="M12 2v2M12 20v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M2 12h2M20 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
     </svg>
   </div>
+
   <h1>Jurisdiction Tracker</h1>
   <p>Tap to start tracking</p>
   <button id="start-btn">Start</button>
@@ -107,6 +109,7 @@ html, body { height: 100%; font-family: -apple-system, BlinkMacSystemFont, 'Sego
       <label>Voice</label>
       <select id="cfg-voice"></select>
     </div>
+    <!-- ✏️ Updated placeholder text -->
     <div class="fg">
       <label>Alert on specific jurisdiction (blank = any)</label>
       <input type="text" id="cfg-alert-sector" placeholder="exact jurisdiction name">
@@ -115,32 +118,18 @@ html, body { height: 100%; font-family: -apple-system, BlinkMacSystemFont, 'Sego
       <input type="checkbox" id="cfg-alert-any">
       <label for="cfg-alert-any">Alert + vibrate on every boundary crossing</label>
     </div>
-    <div class="fg chk-row">
-      <input type="checkbox" id="cfg-demo">
-      <label for="cfg-demo">Demo mode (simulate preset route)</label>
-    </div>
     <button id="save-btn">Save &amp; Apply</button>
   </div>
 </div>
 
 <script>
+
 const FS_BASE = 'https://services1.arcgis.com/kILp9lqGUeOhnDbI/arcgis/rest/services/NFIP_Directory_v2/FeatureServer';
-const LAYER   = 0;
-const FIELD   = 'Name_Proper';
+const LAYER   = 0;           // layer index
+const FIELD   = 'Name_Proper'; // field that holds the jurisdiction name
 
-// Demo waypoints — Nashville area crossing several NFIP jurisdictions
-const DEMO_ROUTE = [
-  [36.1627, -86.7816],
-  [36.1500, -86.7900],
-  [36.1350, -86.8100],
-  [36.1200, -86.8300],
-  [36.0900, -86.7800],
-  [36.0600, -86.7500],
-  [36.0400, -86.7200],
-];
-let demoIndex = 0, demoTimer = null;
 
-let cfg = { url: FS_BASE, layer: LAYER, field: FIELD, alertSector: '', alertAny: true, voiceName: '', demoMode: false };
+let cfg = { url: FS_BASE, layer: LAYER, field: FIELD, alertSector: '', alertAny: true, voiceName: '' };
 try { Object.assign(cfg, JSON.parse(localStorage.getItem('jurisCfg') || '{}')); } catch(e) {}
 function saveCfg() { try { localStorage.setItem('jurisCfg', JSON.stringify(cfg)); } catch(e) {} }
 function layerUrl() { return cfg.url + '/' + cfg.layer; }
@@ -155,7 +144,7 @@ function setMapHeight() {
 const map = L.map('map', { zoomControl: false, attributionControl: false, tap: false });
 L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}', { maxZoom: 16 }).addTo(map);
 L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Reference/MapServer/tile/{z}/{y}/{x}', { maxZoom: 16 }).addTo(map);
-map.setView([35.9, -84.0], 9);
+map.setView([35.9, -84.0], 9); // ✏️ Adjust default center for your area
 
 let sectorLayer = null, labelLayer = null, locMarker = null, accCircle = null;
 let currentSector = null, watchId = null, alertTimer = null, qTimer = null, extentTimer = null, initialFitDone = false;
@@ -230,36 +219,7 @@ async function reloadSectors() {
   } catch(e) { setDot('error'); setMsg('Layer load failed'); console.error(e); }
 }
 
-function startDemo() {
-  demoIndex = 0;
-  clearInterval(demoTimer);
-  demoTimer = setInterval(function() {
-    const [lat, lng] = DEMO_ROUTE[demoIndex % DEMO_ROUTE.length];
-    demoIndex++;
-    const ll = [lat, lng];
-    if (!locMarker) {
-      locMarker = L.circleMarker(ll, { radius: 9, color: '#fff', fillColor: '#e09000', fillOpacity: 1, weight: 2.5, zIndexOffset: 1000 }).addTo(map);
-      accCircle = L.circle(ll, { radius: 50, color: '#e09000', fillColor: '#e09000', fillOpacity: 0.08, weight: 0.5 }).addTo(map);
-    } else {
-      locMarker.setLatLng(ll);
-      accCircle.setLatLng(ll);
-    }
-    document.getElementById('coords-display').textContent = lat.toFixed(5) + ', ' + lng.toFixed(5) + ' [DEMO]';
-    setDot('warn'); setMsg('Demo mode');
-    if (!initialFitDone) { map.setView(ll, 12); initialFitDone = true; }
-    doQuery(lat, lng);
-    if (demoIndex >= DEMO_ROUTE.length) { clearInterval(demoTimer); setMsg('Demo complete'); }
-  }, 3000);
-}
-
-function stopDemo() {
-  clearInterval(demoTimer);
-  demoTimer = null;
-  demoIndex = 0;
-}
-
 function startGPS() {
-  if (cfg.demoMode) { startDemo(); return; }
   if (!navigator.geolocation) { setDot('error'); setMsg('Geolocation not supported'); return; }
   if (watchId != null) navigator.geolocation.clearWatch(watchId);
   setMsg('Acquiring GPS…');
@@ -318,11 +278,13 @@ async function doQuery(lat, lng) {
   try {
     const data = await (await fetch(url)).json();
     if (!data.features || data.features.length === 0) { setSector(null); return; }
+    // Pick the smallest polygon by bounding box area (most specific jurisdiction)
     let best = null, bestArea = Infinity;
     data.features.forEach(function(feat) {
       if (!feat.geometry || !feat.geometry.rings) return;
+      const rings = feat.geometry.rings;
       let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
-      feat.geometry.rings.forEach(function(ring) {
+      rings.forEach(function(ring) {
         ring.forEach(function(pt) {
           if (pt[0] < minX) minX = pt[0]; if (pt[0] > maxX) maxX = pt[0];
           if (pt[1] < minY) minY = pt[1]; if (pt[1] > maxY) maxY = pt[1];
@@ -378,7 +340,6 @@ function openConfig() {
   loadVoices();
   document.getElementById('cfg-alert-sector').value = cfg.alertSector;
   document.getElementById('cfg-alert-any').checked = cfg.alertAny;
-  document.getElementById('cfg-demo').checked = cfg.demoMode;
   document.getElementById('config-overlay').classList.add('open');
 }
 function closeConfig() { document.getElementById('config-overlay').classList.remove('open'); }
@@ -389,9 +350,7 @@ function saveConfig() {
   if (!isNaN(vi) && voices[vi]) { selectedVoice = voices[vi]; cfg.voiceName = voices[vi].name; speak('Voice selected'); }
   cfg.alertSector = document.getElementById('cfg-alert-sector').value.trim();
   cfg.alertAny    = document.getElementById('cfg-alert-any').checked;
-  cfg.demoMode    = document.getElementById('cfg-demo').checked;
   saveCfg(); closeConfig();
-  if (cfg.demoMode) { stopDemo(); startDemo(); } else { stopDemo(); startGPS(); }
 }
 
 document.getElementById('start-btn').addEventListener('click', function() {
