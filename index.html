@@ -20,9 +20,10 @@ html, body { height: 100%; font-family: -apple-system, BlinkMacSystemFont, 'Sego
 
 #floating-card { position: fixed; bottom: 24px; left: 16px; right: 16px; background: #fff; border-radius: 16px; padding: 14px 16px 12px; border: 0.5px solid #dde3ed; box-shadow: 0 2px 12px rgba(0,0,0,0.12); z-index: 1000; }
 #banner-label { font-size: 10px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: #7a8499; margin-bottom: 3px; }
-#sector-name { font-size: 22px; font-weight: 700; color: #1a6abf; white-space: nowrap; overflow: hidden; line-height: 1.2; }
-#sector-name.scrolling { animation: marquee 8s linear infinite; display: inline-block; }
-@keyframes marquee { 0%{transform:translateX(0)} 100%{transform:translateX(-100%)} }
+#sector-name { font-size: 22px; font-weight: 700; color: #1a6abf; white-space: nowrap; line-height: 1.2; display: inline-block; }
+#sector-name-wrap { overflow: hidden; width: 100%; }
+#sector-name.scrolling { animation: marquee 8s linear infinite; }
+@keyframes marquee { 0%{transform:translateX(100%)} 100%{transform:translateX(-100%)} }
 #sector-name.unknown { color: #9aa0b0; font-style: italic; font-weight: 400; font-size: 18px; }
 #sector-name.flash { animation: flash 0.7s ease; }
 @keyframes flash { 0%{background:rgba(26,106,191,0.12);border-radius:4px;padding-left:6px} 100%{background:transparent;padding-left:0} }
@@ -74,9 +75,9 @@ html, body { height: 100%; font-family: -apple-system, BlinkMacSystemFont, 'Sego
 
 <div id="floating-card">
   <div style="display:flex;align-items:flex-start;justify-content:space-between;">
-    <div style="flex:1;min-width:0;overflow:hidden;">
+    <div style="flex:1;min-width:0;">
       <div id="banner-label">Jurisdiction</div>
-      <div id="sector-name" class="unknown">Locating…</div>
+      <div id="sector-name-wrap"><div id="sector-name" class="unknown">Locating…</div></div>
     </div>
   </div>
   <div id="card-row">
@@ -295,9 +296,11 @@ function setSector(name) {
     spokeSector = true; return;
   }
   el.textContent = name; el.className = '';
-  const container = el.parentElement;
+  const wrap = document.getElementById('sector-name-wrap');
   el.classList.remove('scrolling');
-  if (el.scrollWidth > container.clientWidth) { el.classList.add('scrolling'); }
+  requestAnimationFrame(function() {
+    if (el.scrollWidth > wrap.clientWidth) { el.classList.add('scrolling'); }
+  });
   void el.offsetWidth; el.classList.add('flash');
   fireAlert(name);
   speak(spokeSector ? 'Entering ' + name : 'Jurisdiction: ' + name);
