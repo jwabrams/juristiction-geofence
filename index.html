@@ -118,6 +118,10 @@ html, body { height: 100%; font-family: -apple-system, BlinkMacSystemFont, 'Sego
       <input type="checkbox" id="cfg-alert-any">
       <label for="cfg-alert-any">Alert + vibrate on every boundary crossing</label>
     </div>
+    <div class="fg chk-row">
+      <input type="checkbox" id="cfg-demo">
+      <label for="cfg-demo">Demo mode (simulate preset route)</label>
+    </div>
     <button id="save-btn">Save &amp; Apply</button>
   </div>
 </div>
@@ -131,7 +135,19 @@ const LAYER   = 0;           // layer index
 const FIELD   = 'Name_Proper'; // field that holds the jurisdiction name
 // ============================================================
 
-let cfg = { url: FS_BASE, layer: LAYER, field: FIELD, alertSector: '', alertAny: true, voiceName: '' };
+// Demo waypoints — TN route crossing several NFIP jurisdictions
+const DEMO_ROUTE = [
+  [36.1627, -86.7816], // Nashville core
+  [36.1500, -86.7900], // Nashville west
+  [36.1350, -86.8100], // Belle Meade (incorporated city inside Davidson Co)
+  [36.1200, -86.8300], // Oak Hill
+  [36.0900, -86.7800], // Brentwood (Williamson Co)
+  [36.0600, -86.7500], // Franklin
+  [36.0400, -86.7200], // Franklin east
+];
+let demoIndex = 0, demoTimer = null;
+
+let cfg = { url: FS_BASE, layer: LAYER, field: FIELD, alertSector: '', alertAny: true, voiceName: '', demoMode: false };
 try { Object.assign(cfg, JSON.parse(localStorage.getItem('jurisCfg') || '{}')); } catch(e) {}
 function saveCfg() { try { localStorage.setItem('jurisCfg', JSON.stringify(cfg)); } catch(e) {} }
 function layerUrl() { return cfg.url + '/' + cfg.layer; }
@@ -221,7 +237,35 @@ async function reloadSectors() {
   } catch(e) { setDot('error'); setMsg('Layer load failed'); console.error(e); }
 }
 
-function startGPS() {
+function startDemo() {
+  demoIndex = 0;
+  clearInterval(demoTimer);
+  demoTimer = setInterval(function() {
+    const [lat, lng] = DEMO_ROUTE[demoIndex % DEMO_ROUTE.length];
+    demoIndex++;
+    const ll = [lat, lng];
+    if (!locMarker) {
+      locMarker = L.circleMarker(ll, { radius: 9, color: '#fff', fillColor: '#e09000', fillOpacity: 1, weight: 2.5, zIndexOffset: 1000 }).addTo(map);
+      accCircle = L.circle(ll, { radius: 50, color: '#e09000', fillColor: '#e09000', fillOpacity: 0.08, weight: 0.5 }).addTo(map);
+    } else {
+      locMarker.setLatLng(ll);
+      accCircle.setLatLng(ll);
+    }
+    document.getElementById('coords-display').textContent = lat.toFixed(5) + ', ' + lng.toFixed(5) + ' [DEMO]';
+    setDot('warn'); setMsg('Demo mode');
+    if (!initialFitDone) { map.setView(ll, 12); initialFitDone = true; }
+    doQuery(lat, lng);
+    if (demoIndex >= DEMO_ROUTE.length) { clearInterval(demoTimer); setMsg('Demo complete'); }
+  }, 3000);
+}
+
+function stopDemo() {
+  clearInterval(demoTimer);
+  demoTimer = null;
+  demoIndex = 0;
+}
+
+
   if (!navigator.geolocation) { setDot('error'); setMsg('Geolocation not supported'); return; }
   if (watchId != null) navigator.geolocation.clearWatch(watchId);
   setMsg('Acquiring GPS…');
@@ -342,6 +386,7 @@ function openConfig() {
   loadVoices();
   document.getElementById('cfg-alert-sector').value = cfg.alertSector;
   document.getElementById('cfg-alert-any').checked = cfg.alertAny;
+  document.getElementById('cfg-demo').checked = cfg.demoMode;
   document.getElementById('config-overlay').classList.add('open');
 }
 function closeConfig() { document.getElementById('config-overlay').classList.remove('open'); }
@@ -352,6 +397,8 @@ function saveConfig() {
   if (!isNaN(vi) && voices[vi]) { selectedVoice = voices[vi]; cfg.voiceName = voices[vi].name; speak('Voice selected'); }
   cfg.alertSector = document.getElementById('cfg-alert-sector').value.trim();
   cfg.alertAny    = document.getElementById('cfg-alert-any').checked;
+  cfg.demoMode    = document.getElementById('cfg-demo').checked;
+  if (cfg.demoMode) { stopDemo(); startDemo(); } else { stopDemo(); startGPS(); }
   saveCfg(); closeConfig();
 }
 
