@@ -108,14 +108,6 @@ html, body { height: 100%; font-family: -apple-system, BlinkMacSystemFont, 'Sego
   <div id="config-panel">
     <button id="close-cfg">✕</button>
     <h2>Settings</h2>
-    <div class="fg">
-      <label>Voice</label>
-      <select id="cfg-voice"></select>
-    </div>
-    <div class="fg">
-      <label>Alert on specific jurisdiction (blank = any)</label>
-      <input type="text" id="cfg-alert-sector" placeholder="exact jurisdiction name">
-    </div>
     <div class="fg chk-row">
       <input type="checkbox" id="cfg-alert-any">
       <label for="cfg-alert-any">Alert + vibrate on every boundary crossing</label>
@@ -129,7 +121,7 @@ const FS_BASE = 'https://services1.arcgis.com/kILp9lqGUeOhnDbI/arcgis/rest/servi
 const LAYER   = 0;
 const FIELD   = 'Name_Proper';
 
-let cfg = { url: FS_BASE, layer: LAYER, field: FIELD, alertSector: '', alertAny: true, voiceName: '' };
+let cfg = { url: FS_BASE, layer: LAYER, field: FIELD, alertAny: true, voiceName: '' };
 try { Object.assign(cfg, JSON.parse(localStorage.getItem('jurisCfg') || '{}')); } catch(e) {}
 function saveCfg() { try { localStorage.setItem('jurisCfg', JSON.stringify(cfg)); } catch(e) {} }
 function layerUrl() { return cfg.url + '/' + cfg.layer; }
@@ -146,18 +138,9 @@ let currentSector = null, watchId = null, alertTimer = null, qTimer = null, exte
 let spokeSector = false;
 
 // Speech
-let selectedVoice = null;
 function loadVoices() {
   if (!window.speechSynthesis) return;
-  const PREFERRED = ['Samantha', 'Karen', 'Alex', 'Daniel', 'Google US English', 'Google UK English Female', 'Google UK English Male'];
-  const all = window.speechSynthesis.getVoices().filter(v => v.lang.startsWith('en-US') || v.lang.startsWith('en-us'));
-  const voices = all.filter(v => PREFERRED.includes(v.name)).slice(0, 4).length >= 2
-    ? all.filter(v => PREFERRED.includes(v.name)).slice(0, 4)
-    : all.slice(0, 4);
-  const sel = document.getElementById('cfg-voice');
-  if (!sel || voices.length === 0) return;
-  sel.innerHTML = voices.map((v, i) => '<option value="' + i + '"' + (v.name === cfg.voiceName ? ' selected' : '') + '>' + v.name + ' (' + v.lang + ')</option>').join('');
-  selectedVoice = voices.find(v => v.name === cfg.voiceName) || voices[0];
+  selectedVoice = window.speechSynthesis.getVoices().find(v => v.name === 'Samantha') || null;
 }
 if (window.speechSynthesis) { window.speechSynthesis.onvoiceschanged = loadVoices; loadVoices(); }
 
@@ -322,8 +305,7 @@ function setSector(name) {
 }
 
 function fireAlert(name) {
-  const hit = cfg.alertAny || (cfg.alertSector && name.toLowerCase() === cfg.alertSector.toLowerCase());
-  if (!hit) return;
+  if (!cfg.alertAny) return;
   const ab = document.getElementById('alert-banner');
   document.getElementById('alert-text').textContent = name;
   ab.classList.add('visible');
@@ -345,11 +327,7 @@ function openConfig() {
 function closeConfig() { document.getElementById('config-overlay').classList.remove('open'); }
 
 function saveConfig() {
-  const voices = window.speechSynthesis ? window.speechSynthesis.getVoices().filter(v => v.lang.startsWith('en')) : [];
-  const vi = parseInt(document.getElementById('cfg-voice').value);
-  if (!isNaN(vi) && voices[vi]) { selectedVoice = voices[vi]; cfg.voiceName = voices[vi].name; speak('Voice selected'); }
-  cfg.alertSector = document.getElementById('cfg-alert-sector').value.trim();
-  cfg.alertAny    = document.getElementById('cfg-alert-any').checked;
+  cfg.alertAny = document.getElementById('cfg-alert-any').checked;
   saveCfg(); closeConfig();
 }
 
