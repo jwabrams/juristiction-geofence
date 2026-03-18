@@ -179,6 +179,7 @@ function setMsg(m, isError) {
   const el = document.getElementById('gps-status');
   el.style.color = isError ? '#e03c3c' : '#7a8499';
   el.style.fontWeight = isError ? '500' : '';
+  el.style.fontFamily = (!isError && m.includes(',')) ? 'monospace' : '';
   el.textContent = m;
 }
 
@@ -246,7 +247,7 @@ function pollGPS() {
 
 function onPos(pos) {
   const lat = pos.coords.latitude, lng = pos.coords.longitude, acc = pos.coords.accuracy;
-  setDot('active'); setMsg('GPS ±' + Math.round(acc) + ' m');
+  setDot('active'); setMsg(lat.toFixed(5) + ', ' + lng.toFixed(5));
   const ll = [lat, lng];
   if (!locMarker) {
     locMarker = L.circleMarker(ll, { radius: 9, color: '#fff', fillColor: '#1a6abf', fillOpacity: 1, weight: 2.5, zIndexOffset: 1000 }).addTo(map);
