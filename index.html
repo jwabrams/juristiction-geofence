@@ -247,7 +247,7 @@ function pollGPS() {
 
 function onPos(pos) {
   const lat = pos.coords.latitude, lng = pos.coords.longitude, acc = pos.coords.accuracy;
-  setDot('active'); setMsg(lat.toFixed(5) + ', ' + lng.toFixed(5));
+  setDot('active'); setMsg(lat.toFixed(5) + ', ' + lng.toFixed(5) + '  ±' + Math.round(acc) + 'm');
   const ll = [lat, lng];
   if (!locMarker) {
     locMarker = L.circleMarker(ll, { radius: 9, color: '#fff', fillColor: '#1a6abf', fillOpacity: 1, weight: 2.5, zIndexOffset: 1000 }).addTo(map);
