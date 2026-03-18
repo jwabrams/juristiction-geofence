@@ -156,10 +156,11 @@ const map = L.map('map', { zoomControl: false, attributionControl: false, tap: f
 L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}', { maxZoom: 16 }).addTo(map);
 L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Reference/MapServer/tile/{z}/{y}/{x}', { maxZoom: 16 }).addTo(map);
 map.setView([35.9, -84.0], 9);
+map.on('dragstart', function() { userPanned = true; });
 
 let sectorLayer = null, labelLayer = null, locMarker = null, accCircle = null;
-let currentSector = null, watchId = null, alertTimer = null, qTimer = null, extentTimer = null, initialFitDone = false;
-let spokeSector = false, selectedVoice = null;
+let currentSector = null, watchId = null, alertTimer = null, qTimer = null, initialFitDone = false;
+let spokeSector = false, selectedVoice = null, userPanned = false;
 
 function loadVoices() {
   if (!window.speechSynthesis) return;
@@ -245,8 +246,9 @@ function onPos(pos) {
   clearTimeout(qTimer);
   qTimer = setTimeout(function() { doQuery(lat, lng); }, 600);
   if (!initialFitDone) {
-    clearTimeout(extentTimer);
-    extentTimer = setTimeout(function() { updateMapExtent(lat, lng); }, 1500);
+    updateMapExtent(lat, lng);
+  } else if (!userPanned) {
+    map.setView(ll, map.getZoom(), { animate: true });
   }
 }
 
@@ -340,7 +342,7 @@ function fireAlert(name) {
 
 function setDot(s) { document.getElementById('gps-dot').className = s; }
 function setMsg(m) { document.getElementById('gps-status').textContent = m; }
-function centerOnMe() { if (locMarker) map.setView(locMarker.getLatLng(), 14); }
+function centerOnMe() { if (locMarker) { userPanned = false; map.setView(locMarker.getLatLng(), map.getZoom()); } }
 
 function openConfig() {
   document.getElementById('cfg-alert-any').checked = cfg.alertAny;
