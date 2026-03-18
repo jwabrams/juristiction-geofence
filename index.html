@@ -86,15 +86,10 @@ html, body { height: 100%; font-family: -apple-system, BlinkMacSystemFont, 'Sego
 .chk-row input[type=checkbox] { width: 18px; height: 18px; accent-color: #1a6abf; flex-shrink: 0; }
 .chk-row label { font-size: 14px; color: #1a1f2e; }
 
-#zoom-btns { position: fixed; top: 20px; right: 12px; display: flex; flex-direction: column; gap: 6px; z-index: 1000; } background: none; border: none; box-shadow: none; font-size: 11px; font-weight: 700; color: #1a6abf; text-align: center; white-space: nowrap; text-shadow: 1px 1px 0 #fff, -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff; pointer-events: none; }
+ background: none; border: none; box-shadow: none; font-size: 11px; font-weight: 700; color: #1a6abf; text-align: center; white-space: nowrap; text-shadow: 1px 1px 0 #fff, -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff; pointer-events: none; }
 </style>
 </head>
 <body>
-
-<div id="zoom-btns">
-  <button class="ctrl-btn" id="zoom-in-btn" style="font-size:20px;font-weight:300;">+</button>
-  <button class="ctrl-btn" id="zoom-out-btn" style="font-size:20px;font-weight:300;">−</button>
-</div>
 
 <div id="map"></div>
 <div id="alert-banner">Entered: <span id="alert-text"></span></div>
@@ -387,8 +382,6 @@ window.addEventListener('resize', function() { map.invalidateSize(); });
 document.getElementById('cfg-btn').addEventListener('click', openConfig);
 document.getElementById('close-cfg').addEventListener('click', closeConfig);
 document.getElementById('config-overlay').addEventListener('click', function(e) { if (e.target === this) closeConfig(); });
-document.getElementById('zoom-in-btn').addEventListener('click', function() { map.zoomIn(); });
-document.getElementById('zoom-out-btn').addEventListener('click', function() { map.zoomOut(); });
 document.getElementById('reload-btn').addEventListener('click', reloadSectors);
 
 try {
