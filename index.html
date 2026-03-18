@@ -60,15 +60,17 @@ html, body { height: 100%; font-family: -apple-system, BlinkMacSystemFont, 'Sego
 .ctrl-btn:active { background: #f0f3f8; }
 
 #splash {
-  position: fixed; inset: 0; z-index: 9999; background: #f8f7f4;
-  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px;
-  overflow: hidden;
+  position: fixed; inset: 0; z-index: 9999; background: #fff;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px;
 }
-#splash svg.hex-bg { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0.15; }
-#splash-icon { width: 72px; height: 72px; position: relative; z-index: 1; }
-#splash h1 { font-size: 26px; font-weight: 700; color: #1a1f2e; z-index: 1; margin: 0; }
-#splash p { font-size: 15px; color: #7a8499; z-index: 1; margin: 0; }
-#splash button { padding: 14px 48px; background: #1a6abf; border: none; border-radius: 10px; color: #fff; font-size: 18px; font-weight: 600; cursor: pointer; -webkit-appearance: none; z-index: 1; margin-top: 4px; }
+#splash-pulse {
+  width: 72px; height: 72px; border-radius: 50%; background: rgba(26,106,191,0.12);
+  display: flex; align-items: center; justify-content: center; animation: sp 1.8s ease-in-out infinite;
+}
+@keyframes sp { 0%,100%{transform:scale(1)} 50%{transform:scale(1.12)} }
+#splash h1 { font-size: 26px; font-weight: 700; color: #1a6abf; }
+#splash p { font-size: 15px; color: #7a8499; }
+#splash button { padding: 14px 48px; background: #1a6abf; border: none; border-radius: 10px; color: #fff; font-size: 18px; font-weight: 600; cursor: pointer; -webkit-appearance: none; }
 
 #config-overlay { display: none; position: fixed; inset: 0; z-index: 3000; }
 #config-overlay.open { display: block; }
@@ -113,41 +115,11 @@ html, body { height: 100%; font-family: -apple-system, BlinkMacSystemFont, 'Sego
 </div>
 
 <div id="splash">
-  <svg class="hex-bg" viewBox="0 0 400 900" xmlns="http://www.w3.org/2000/svg">
-    <g fill="none" stroke="#1a6abf" stroke-width="1">
-      <polygon points="30,10 58,10 72,34 58,58 30,58 16,34"/><polygon points="86,10 114,10 128,34 114,58 86,58 72,34"/><polygon points="142,10 170,10 184,34 170,58 142,58 128,34"/><polygon points="198,10 226,10 240,34 226,58 198,58 184,34"/><polygon points="254,10 282,10 296,34 282,58 254,58 240,34"/><polygon points="310,10 338,10 352,34 338,58 310,58 296,34"/><polygon points="366,10 394,10 408,34 394,58 366,58 352,34"/>
-      <polygon points="2,58 30,58 44,82 30,106 2,106 -12,82"/><polygon points="58,58 86,58 100,82 86,106 58,106 44,82"/><polygon points="114,58 142,58 156,82 142,106 114,106 100,82"/><polygon points="170,58 198,58 212,82 198,106 170,106 156,82"/><polygon points="226,58 254,58 268,82 254,106 226,106 212,82"/><polygon points="282,58 310,58 324,82 310,106 282,106 268,82"/><polygon points="338,58 366,58 380,82 366,106 338,106 324,82"/>
-      <polygon points="30,106 58,106 72,130 58,154 30,154 16,130"/><polygon points="86,106 114,106 128,130 114,154 86,154 72,130"/><polygon points="142,106 170,106 184,130 170,154 142,154 128,130"/><polygon points="198,106 226,106 240,130 226,154 198,154 184,130"/><polygon points="254,106 282,106 296,130 282,154 254,154 240,130"/><polygon points="310,106 338,106 352,130 338,154 310,154 296,130"/><polygon points="366,106 394,106 408,130 394,154 366,154 352,130"/>
-      <polygon points="2,154 30,154 44,178 30,202 2,202 -12,178"/><polygon points="58,154 86,154 100,178 86,202 58,202 44,178"/><polygon points="114,154 142,154 156,178 142,202 114,202 100,178"/><polygon points="170,154 198,154 212,178 198,202 170,202 156,178"/><polygon points="226,154 254,154 268,178 254,202 226,202 212,178"/><polygon points="282,154 310,154 324,178 310,202 282,202 268,178"/><polygon points="338,154 366,154 380,178 366,202 338,202 324,178"/>
-      <polygon points="30,202 58,202 72,226 58,250 30,250 16,226"/><polygon points="86,202 114,202 128,226 114,250 86,250 72,226"/><polygon points="142,202 170,202 184,226 170,250 142,250 128,226"/><polygon points="198,202 226,202 240,226 226,250 198,250 184,226"/><polygon points="254,202 282,202 296,226 282,250 254,250 240,226"/><polygon points="310,202 338,202 352,226 338,250 310,250 296,226"/><polygon points="366,202 394,202 408,226 394,250 366,250 352,226"/>
-      <polygon points="2,250 30,250 44,274 30,298 2,298 -12,274"/><polygon points="58,250 86,250 100,274 86,298 58,298 44,274"/><polygon points="114,250 142,250 156,274 142,298 114,298 100,274"/><polygon points="170,250 198,250 212,274 198,298 170,298 156,274"/><polygon points="226,250 254,250 268,274 254,298 226,298 212,274"/><polygon points="282,250 310,250 324,274 310,298 282,298 268,274"/><polygon points="338,250 366,250 380,274 366,298 338,298 324,274"/>
-      <polygon points="30,298 58,298 72,322 58,346 30,346 16,322"/><polygon points="86,298 114,298 128,322 114,346 86,346 72,322"/><polygon points="142,298 170,298 184,322 170,346 142,346 128,322"/><polygon points="198,298 226,298 240,322 226,346 198,346 184,322"/><polygon points="254,298 282,298 296,322 282,346 254,346 240,322"/><polygon points="310,298 338,298 352,322 338,346 310,346 296,322"/><polygon points="366,298 394,298 408,322 394,346 366,346 352,322"/>
-      <polygon points="2,346 30,346 44,370 30,394 2,394 -12,370"/><polygon points="58,346 86,346 100,370 86,394 58,394 44,370"/><polygon points="114,346 142,346 156,370 142,394 114,394 100,370"/><polygon points="170,346 198,346 212,370 198,394 170,394 156,370"/><polygon points="226,346 254,346 268,370 254,394 226,394 212,370"/><polygon points="282,346 310,346 324,370 310,394 282,394 268,370"/><polygon points="338,346 366,346 380,370 366,394 338,394 324,370"/>
-      <polygon points="30,394 58,394 72,418 58,442 30,442 16,418"/><polygon points="86,394 114,394 128,418 114,442 86,442 72,418"/><polygon points="142,394 170,394 184,418 170,442 142,442 128,418"/><polygon points="198,394 226,394 240,418 226,442 198,442 184,418"/><polygon points="254,394 282,394 296,418 282,442 254,442 240,418"/><polygon points="310,394 338,394 352,418 338,442 310,442 296,418"/><polygon points="366,394 394,394 408,418 394,442 366,442 352,418"/>
-      <polygon points="2,442 30,442 44,466 30,490 2,490 -12,466"/><polygon points="58,442 86,442 100,466 86,490 58,490 44,466"/><polygon points="114,442 142,442 156,466 142,490 114,490 100,466"/><polygon points="170,442 198,442 212,466 198,490 170,490 156,466"/><polygon points="226,442 254,442 268,466 254,490 226,490 212,466"/><polygon points="282,442 310,442 324,466 310,490 282,490 268,466"/><polygon points="338,442 366,442 380,466 366,490 338,490 324,466"/>
-      <polygon points="30,490 58,490 72,514 58,538 30,538 16,514"/><polygon points="86,490 114,490 128,514 114,538 86,538 72,514"/><polygon points="142,490 170,490 184,514 170,538 142,538 128,514"/><polygon points="198,490 226,490 240,514 226,538 198,538 184,514"/><polygon points="254,490 282,490 296,514 282,538 254,538 240,514"/><polygon points="310,490 338,490 352,514 338,538 310,538 296,514"/><polygon points="366,490 394,490 408,514 394,538 366,538 352,514"/>
-      <polygon points="2,538 30,538 44,562 30,586 2,586 -12,562"/><polygon points="58,538 86,538 100,562 86,586 58,586 44,562"/><polygon points="114,538 142,538 156,562 142,586 114,586 100,562"/><polygon points="170,538 198,538 212,562 198,586 170,586 156,562"/><polygon points="226,538 254,538 268,562 254,586 226,586 212,562"/><polygon points="282,538 310,538 324,562 310,586 282,586 268,562"/><polygon points="338,538 366,538 380,562 366,586 338,586 324,562"/>
-      <polygon points="30,586 58,586 72,610 58,634 30,634 16,610"/><polygon points="86,586 114,586 128,610 114,634 86,634 72,610"/><polygon points="142,586 170,586 184,610 170,634 142,634 128,610"/><polygon points="198,586 226,586 240,610 226,634 198,634 184,610"/><polygon points="254,586 282,586 296,610 282,634 254,634 240,610"/><polygon points="310,586 338,586 352,610 338,634 310,634 296,610"/><polygon points="366,586 394,586 408,610 394,634 366,634 352,610"/>
-      <polygon points="2,634 30,634 44,658 30,682 2,682 -12,658"/><polygon points="58,634 86,634 100,658 86,682 58,682 44,658"/><polygon points="114,634 142,634 156,658 142,682 114,682 100,658"/><polygon points="170,634 198,634 212,658 198,682 170,682 156,658"/><polygon points="226,634 254,634 268,658 254,682 226,682 212,658"/><polygon points="282,634 310,634 324,658 310,682 282,682 268,658"/><polygon points="338,634 366,634 380,658 366,682 338,682 324,658"/>
-      <polygon points="30,682 58,682 72,706 58,730 30,730 16,706"/><polygon points="86,682 114,682 128,706 114,730 86,730 72,706"/><polygon points="142,682 170,682 184,706 170,730 142,730 128,706"/><polygon points="198,682 226,682 240,706 226,730 198,730 184,706"/><polygon points="254,682 282,682 296,706 282,730 254,730 240,706"/><polygon points="310,682 338,682 352,706 338,730 310,730 296,706"/><polygon points="366,682 394,682 408,706 394,730 366,730 352,706"/>
-      <polygon points="2,730 30,730 44,754 30,778 2,778 -12,754"/><polygon points="58,730 86,730 100,754 86,778 58,778 44,754"/><polygon points="114,730 142,730 156,754 142,778 114,778 100,754"/><polygon points="170,730 198,730 212,754 198,778 170,778 156,754"/><polygon points="226,730 254,730 268,754 254,778 226,778 212,754"/><polygon points="282,730 310,730 324,754 310,778 282,778 268,754"/><polygon points="338,730 366,730 380,754 366,778 338,778 324,754"/>
-      <polygon points="30,778 58,778 72,802 58,826 30,826 16,802"/><polygon points="86,778 114,778 128,802 114,826 86,826 72,802"/><polygon points="142,778 170,778 184,802 170,826 142,826 128,802"/><polygon points="198,778 226,778 240,802 226,826 198,826 184,802"/><polygon points="254,778 282,778 296,802 282,826 254,826 240,802"/><polygon points="310,778 338,778 352,802 338,826 310,826 296,802"/><polygon points="366,778 394,778 408,802 394,826 366,826 352,802"/>
-    </g>
-  </svg>
-  <svg id="splash-icon" viewBox="-1 -1 90 102" xmlns="http://www.w3.org/2000/svg">
-    <polygon points="44,1 85,23 85,77 44,99 3,77 3,23" fill="#1a6abf" stroke="none"/>
-    <g transform="translate(44,50)">
-      <circle cx="0" cy="0" r="5" fill="#fff"/>
-      <line x1="0" y1="-24" x2="0" y2="-10" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/>
-      <line x1="0" y1="10" x2="0" y2="24" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/>
-      <line x1="-24" y1="0" x2="-10" y2="0" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/>
-      <line x1="10" y1="0" x2="24" y2="0" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/>
-      <line x1="-17" y1="-17" x2="-7" y2="-7" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/>
-      <line x1="7" y1="7" x2="17" y2="17" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/>
-      <line x1="17" y1="-17" x2="7" y2="-7" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/>
-      <line x1="-7" y1="7" x2="-17" y2="17" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/>
-    </g>
-  </svg>
+  <div id="splash-pulse">
+    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#1a6abf" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="3"/><path d="M12 2v2M12 20v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M2 12h2M20 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+    </svg>
+  </div>
   <h1>Jurisdiction Tracker</h1>
   <p>Tap to start tracking</p>
   <button id="start-btn">Locate</button>
@@ -168,6 +140,8 @@ html, body { height: 100%; font-family: -apple-system, BlinkMacSystemFont, 'Sego
 const FS_BASE = 'https://services1.arcgis.com/kILp9lqGUeOhnDbI/arcgis/rest/services/NFIP_Directory_v2/FeatureServer';
 const LAYER   = 0;
 const FIELD   = 'Name_Proper';
+const MIN_MOVE_METERS = 30;
+const POLL_INTERVAL_MS = 8000;
 
 let cfg = { url: FS_BASE, layer: LAYER, field: FIELD, alertAny: true };
 try { Object.assign(cfg, JSON.parse(localStorage.getItem('jurisCfg') || '{}')); } catch(e) {}
@@ -183,6 +157,7 @@ map.on('dragstart', function() { userPanned = true; });
 let sectorLayer = null, labelLayer = null, locMarker = null, accCircle = null;
 let currentSector = null, watchId = null, alertTimer = null, qTimer = null, initialFitDone = false;
 let spokeSector = false, selectedVoice = null, userPanned = false;
+let lastQueryLat = null, lastQueryLng = null;
 
 function loadVoices() {
   if (!window.speechSynthesis) return;
@@ -204,7 +179,6 @@ function setMsg(m, isError) {
   const el = document.getElementById('gps-status');
   el.style.color = isError ? '#e03c3c' : '#7a8499';
   el.style.fontWeight = isError ? '500' : '';
-  el.style.fontFamily = (!isError && m.includes(',')) ? 'monospace' : '';
   el.textContent = m;
 }
 
@@ -257,20 +231,22 @@ async function reloadSectors() {
 
 function startGPS() {
   if (!navigator.geolocation) { setDot('error'); setMsg('Geolocation not supported', true); return; }
-  if (watchId != null) navigator.geolocation.clearWatch(watchId);
-  watchId = navigator.geolocation.watchPosition(onPos, function(e) {
+  if (watchId != null) clearInterval(watchId);
+  pollGPS();
+  watchId = setInterval(pollGPS, POLL_INTERVAL_MS);
+}
+
+function pollGPS() {
+  navigator.geolocation.getCurrentPosition(onPos, function(e) {
     if (e.code === 3) {
-      setMsg('Retrying…');
-      if (watchId != null) navigator.geolocation.clearWatch(watchId);
-      watchId = navigator.geolocation.watchPosition(onPos, onGpsErr, { enableHighAccuracy: false, maximumAge: 10000, timeout: 60000 });
+      navigator.geolocation.getCurrentPosition(onPos, onGpsErr, { enableHighAccuracy: false, maximumAge: 10000, timeout: 60000 });
     } else { onGpsErr(e); }
-  }, { enableHighAccuracy: true, maximumAge: 4000, timeout: 15000 });
+  }, { enableHighAccuracy: true, maximumAge: POLL_INTERVAL_MS, timeout: 15000 });
 }
 
 function onPos(pos) {
   const lat = pos.coords.latitude, lng = pos.coords.longitude, acc = pos.coords.accuracy;
-  setDot('active');
-  setMsg(lat.toFixed(5) + ', ' + lng.toFixed(5));
+  setDot('active'); setMsg('GPS ±' + Math.round(acc) + ' m');
   const ll = [lat, lng];
   if (!locMarker) {
     locMarker = L.circleMarker(ll, { radius: 9, color: '#fff', fillColor: '#1a6abf', fillOpacity: 1, weight: 2.5, zIndexOffset: 1000 }).addTo(map);
@@ -279,8 +255,12 @@ function onPos(pos) {
     locMarker.setLatLng(ll);
     accCircle.setLatLng(ll).setRadius(acc);
   }
-  clearTimeout(qTimer);
-  qTimer = setTimeout(function() { doQuery(lat, lng); }, 600);
+  const movedEnough = lastQueryLat === null || L.latLng(lat, lng).distanceTo(L.latLng(lastQueryLat, lastQueryLng)) >= MIN_MOVE_METERS;
+  if (movedEnough) {
+    lastQueryLat = lat; lastQueryLng = lng;
+    clearTimeout(qTimer);
+    qTimer = setTimeout(function() { doQuery(lat, lng); }, 400);
+  }
   if (!initialFitDone) {
     updateMapExtent(lat, lng);
   } else if (!userPanned) {
