@@ -220,7 +220,7 @@ async function reloadSectors() {
     });
     if (map.getZoom() < 10) { map.removeLayer(labelLayer); map.removeLayer(sectorLayer); }
     if (n > 0 && !locMarker) map.fitBounds(sectorLayer.getBounds(), { padding: [20, 20] });
-    setDot('active'); setMsg(n + ' jurisdictions loaded');
+    setDot('active'); setMsg('Acquiring GPS…');
   } catch(e) { setDot('error'); setMsg('Layer load failed'); console.error(e); }
 }
 
@@ -242,7 +242,7 @@ function startGPS() {
 function onPos(pos) {
   const lat = pos.coords.latitude, lng = pos.coords.longitude, acc = pos.coords.accuracy;
   document.getElementById('coords-display').textContent = lat.toFixed(5) + ', ' + lng.toFixed(5);
-  setDot('active'); setMsg('GPS ±' + Math.round(acc) + ' m');
+  setDot('active'); setMsg(lat.toFixed(5) + ', ' + lng.toFixed(5));
   const ll = [lat, lng];
   if (!locMarker) {
     locMarker = L.circleMarker(ll, { radius: 9, color: '#fff', fillColor: '#1a6abf', fillOpacity: 1, weight: 2.5, zIndexOffset: 1000 }).addTo(map);
@@ -349,7 +349,21 @@ function fireAlert(name) {
 }
 
 function setDot(s) { document.getElementById('gps-dot').className = s; }
-function setMsg(m) { document.getElementById('gps-status').textContent = m; }
+function setMsg(m) {
+  const el = document.getElementById('gps-status');
+  const dot = document.getElementById('gps-dot');
+  if (dot.className === 'active') {
+    el.style.color = '#7a8499';
+    el.style.fontWeight = '';
+  } else if (dot.className === 'error') {
+    el.style.color = '#e03c3c';
+    el.style.fontWeight = '500';
+  } else {
+    el.style.color = '#7a8499';
+    el.style.fontWeight = '';
+  }
+  document.getElementById('gps-status').textContent = m;
+}
 function centerOnMe() { if (locMarker) { userPanned = false; map.setView(locMarker.getLatLng(), map.getZoom()); } }
 
 function openConfig() {
