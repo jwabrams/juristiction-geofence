@@ -228,7 +228,7 @@ function startGPS() {
   if (!navigator.geolocation) { setDot('error'); setMsg('Geolocation not supported'); return; }
   if (watchId != null) navigator.geolocation.clearWatch(watchId);
   setMsg('Acquiring GPS…');
-  watchId = navigator.geolocation.watchPosition(onPos, onGpsErr, { enableHighAccuracy: true, maximumAge: 4000, timeout: 20000 });
+  watchId = navigator.geolocation.watchPosition(onPos, onGpsErr, { enableHighAccuracy: true, maximumAge: 4000, timeout: 60000 });
 }
 
 function onPos(pos) {
