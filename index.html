@@ -62,11 +62,7 @@ html, body { height: 100%; font-family: -apple-system, BlinkMacSystemFont, 'Sego
 #splash {
   position: fixed; inset: 0; z-index: 9999; background: #fff;
   display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px;
-  overflow: hidden;
 }
-#splash-map-bg { position: absolute; inset: 0; z-index: 0; }
-#splash-map-bg svg { width: 100%; height: 100%; }
-#splash-content { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; gap: 20px; }
 #splash-pulse {
   width: 72px; height: 72px; border-radius: 50%; background: rgba(26,106,191,0.12);
   display: flex; align-items: center; justify-content: center; animation: sp 1.8s ease-in-out infinite;
@@ -122,33 +118,14 @@ html, body { height: 100%; font-family: -apple-system, BlinkMacSystemFont, 'Sego
 </div>
 
 <div id="splash">
-  <div id="splash-map-bg">
-    <div style="position:absolute;inset:0;display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(4,1fr);gap:0;opacity:0.4;">
-      <img src="https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/7/50/34" style="width:100%;height:100%;object-fit:cover;display:block;" onerror="this.style.background='#e8e4dc'">
-      <img src="https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/7/50/35" style="width:100%;height:100%;object-fit:cover;display:block;" onerror="this.style.background='#e8e4dc'">
-      <img src="https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/7/50/36" style="width:100%;height:100%;object-fit:cover;display:block;" onerror="this.style.background='#e8e4dc'">
-      <img src="https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/7/51/34" style="width:100%;height:100%;object-fit:cover;display:block;" onerror="this.style.background='#e8e4dc'">
-      <img src="https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/7/51/35" style="width:100%;height:100%;object-fit:cover;display:block;" onerror="this.style.background='#e8e4dc'">
-      <img src="https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/7/51/36" style="width:100%;height:100%;object-fit:cover;display:block;" onerror="this.style.background='#e8e4dc'">
-      <img src="https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/7/52/34" style="width:100%;height:100%;object-fit:cover;display:block;" onerror="this.style.background='#e8e4dc'">
-      <img src="https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/7/52/35" style="width:100%;height:100%;object-fit:cover;display:block;" onerror="this.style.background='#e8e4dc'">
-      <img src="https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/7/52/36" style="width:100%;height:100%;object-fit:cover;display:block;" onerror="this.style.background='#e8e4dc'">
-      <img src="https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/7/53/34" style="width:100%;height:100%;object-fit:cover;display:block;" onerror="this.style.background='#e8e4dc'">
-      <img src="https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/7/53/35" style="width:100%;height:100%;object-fit:cover;display:block;" onerror="this.style.background='#e8e4dc'">
-      <img src="https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/7/53/36" style="width:100%;height:100%;object-fit:cover;display:block;" onerror="this.style.background='#e8e4dc'">
-    </div>
-    <div style="position:absolute;inset:0;background:linear-gradient(to bottom,rgba(255,255,255,0.88) 0%,rgba(255,255,255,0.2) 40%,rgba(255,255,255,0.2) 60%,rgba(255,255,255,0.88) 100%);"></div>
+  <div id="splash-pulse">
+    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#1a6abf" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="3"/><path d="M12 2v2M12 20v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M2 12h2M20 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+    </svg>
   </div>
-  <div id="splash-content">
-    <div id="splash-pulse">
-      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#1a6abf" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <circle cx="12" cy="12" r="3"/><path d="M12 2v2M12 20v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M2 12h2M20 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
-      </svg>
-    </div>
-    <h1>Jurisdiction Tracker</h1>
-    <p>Tap to start tracking</p>
-    <button id="start-btn">Locate</button>
-  </div>
+  <h1>Jurisdiction Tracker</h1>
+  <p>Tap to start tracking</p>
+  <button id="start-btn">Locate</button>
 </div>
 
 <div id="config-overlay">
