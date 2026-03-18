@@ -123,26 +123,21 @@ html, body { height: 100%; font-family: -apple-system, BlinkMacSystemFont, 'Sego
 
 <div id="splash">
   <div id="splash-map-bg">
-    <div style="position:absolute;inset:0;display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:repeat(6,1fr);opacity:0.35;">
-      <img src="https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/7/49/34" style="width:100%;height:100%;object-fit:cover;display:block;">
-      <img src="https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/7/49/35" style="width:100%;height:100%;object-fit:cover;display:block;">
-      <img src="https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/7/49/36" style="width:100%;height:100%;object-fit:cover;display:block;">
-      <img src="https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/7/49/37" style="width:100%;height:100%;object-fit:cover;display:block;">
-      <img src="https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/7/50/34" style="width:100%;height:100%;object-fit:cover;display:block;">
-      <img src="https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/7/50/35" style="width:100%;height:100%;object-fit:cover;display:block;">
-      <img src="https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/7/50/36" style="width:100%;height:100%;object-fit:cover;display:block;">
-      <img src="https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/7/50/37" style="width:100%;height:100%;object-fit:cover;display:block;">
-      <img src="https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/7/51/34" style="width:100%;height:100%;object-fit:cover;display:block;">
-      <img src="https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/7/51/35" style="width:100%;height:100%;object-fit:cover;display:block;">
-      <img src="https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/7/51/36" style="width:100%;height:100%;object-fit:cover;display:block;">
-      <img src="https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/7/51/37" style="width:100%;height:100%;object-fit:cover;display:block;">
-      <img src="https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/7/52/34" style="width:100%;height:100%;object-fit:cover;display:block;">
-      <img src="https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/7/52/35" style="width:100%;height:100%;object-fit:cover;display:block;">
-      <img src="https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/7/52/36" style="width:100%;height:100%;object-fit:cover;display:block;">
-      <img src="https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/7/52/37" style="width:100%;height:100%;object-fit:cover;display:block;">
-      <img src="https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Reference/MapServer/tile/7/49/34" style="width:100%;height:100%;object-fit:cover;display:block;position:absolute;">
+    <div style="position:absolute;inset:0;display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(4,1fr);gap:0;opacity:0.4;">
+      <img src="https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/7/50/34" style="width:100%;height:100%;object-fit:cover;display:block;" onerror="this.style.background='#e8e4dc'">
+      <img src="https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/7/50/35" style="width:100%;height:100%;object-fit:cover;display:block;" onerror="this.style.background='#e8e4dc'">
+      <img src="https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/7/50/36" style="width:100%;height:100%;object-fit:cover;display:block;" onerror="this.style.background='#e8e4dc'">
+      <img src="https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/7/51/34" style="width:100%;height:100%;object-fit:cover;display:block;" onerror="this.style.background='#e8e4dc'">
+      <img src="https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/7/51/35" style="width:100%;height:100%;object-fit:cover;display:block;" onerror="this.style.background='#e8e4dc'">
+      <img src="https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/7/51/36" style="width:100%;height:100%;object-fit:cover;display:block;" onerror="this.style.background='#e8e4dc'">
+      <img src="https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/7/52/34" style="width:100%;height:100%;object-fit:cover;display:block;" onerror="this.style.background='#e8e4dc'">
+      <img src="https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/7/52/35" style="width:100%;height:100%;object-fit:cover;display:block;" onerror="this.style.background='#e8e4dc'">
+      <img src="https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/7/52/36" style="width:100%;height:100%;object-fit:cover;display:block;" onerror="this.style.background='#e8e4dc'">
+      <img src="https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/7/53/34" style="width:100%;height:100%;object-fit:cover;display:block;" onerror="this.style.background='#e8e4dc'">
+      <img src="https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/7/53/35" style="width:100%;height:100%;object-fit:cover;display:block;" onerror="this.style.background='#e8e4dc'">
+      <img src="https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/7/53/36" style="width:100%;height:100%;object-fit:cover;display:block;" onerror="this.style.background='#e8e4dc'">
     </div>
-    <div style="position:absolute;inset:0;background:linear-gradient(to bottom,rgba(255,255,255,0.85) 0%,rgba(255,255,255,0) 35%,rgba(255,255,255,0) 65%,rgba(255,255,255,0.85) 100%);"></div>
+    <div style="position:absolute;inset:0;background:linear-gradient(to bottom,rgba(255,255,255,0.88) 0%,rgba(255,255,255,0.2) 40%,rgba(255,255,255,0.2) 60%,rgba(255,255,255,0.88) 100%);"></div>
   </div>
   <div id="splash-content">
     <div id="splash-pulse">
