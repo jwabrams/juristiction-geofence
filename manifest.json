@@ -2,12 +2,12 @@
   "name": "Jurisdiction Tracker",
   "short_name": "Jurisdiction",
   "description": "Live GPS sector location tracker to alert you to what jurisdiction you are in",
-  "start_url": "jurisdiction-geofence/index.html",
+  "start_url": "./index.html",
   "scope": "/jurisdiction-geofence/",
   "display": "standalone",
   "orientation": "portrait-primary",
   "background_color": "#ffffff",
-  "theme_color": "#ffffff",
+  "theme_color": "#1a6abf",
   "icons": [
     { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
     { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
